@@ -93,14 +93,14 @@ class AlphaZeroAgent(parl.Agent):
             # print('EPOCH ::: ' + str(epoch + 1))
             print('Эпоха обучения нейронной сети ::: ' + str(epoch + 1))
 
-            batch_count = int(len(examples) / args.batch_size)
-
+            batch_count = int(len(examples) / args.batch_size)  # вычисляем количество операций в одной эпохе,
+            # равное количеству примеров поделенному на размер выборки одного вычисления batch_size
             """ 
             прогресс тренировки по эпохам наблюдаем путем загрузки примеров через бар tqdm
             """
             # pbar = tqdm(range(batch_count), desc='Training Net')
-            pbar = tqdm(range(batch_count), desc='Тренировка сети')
-            for _ in pbar:
+            pbar = tqdm(range(batch_count), desc='Тренировка')
+            for _ in pbar:  # отображение прогресса одной эпохи
                 sample_ids = np.random.randint(
                     len(examples), size=args.batch_size)
                 boards, pis, vs = list(zip(*[examples[i] for i in sample_ids]))
@@ -120,14 +120,8 @@ class AlphaZeroAgent(parl.Agent):
                 pbar.set_postfix(Loss_pi=pi_loss.item(), Loss_v=v_loss.item())
 
     def predict(self, board):
-        # Args:
-        #             board (np.array): input board
-        #         Return:
-        #             pi (np.array): probability of actions
-        #             v (np.array): estimated value of input
         """
-        Аргументы:
-             board (np.array): плата ввода
+        Аргументы: board (np.array): плата ввода
          Возвращение:
              pi (np.array): вероятность действий
              v (np.array): оценочное значение ввода
