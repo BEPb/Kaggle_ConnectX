@@ -40,7 +40,7 @@ def get_test_dataset():  # функция обработки тестового 
     # with open("refmoves1k_kaggle") as f:
     "переменной f присвоим датасет из json файла refmoves1k_kaggle"
     number_str = 1
-    with open("/home/user/PycharmProjects/Python-100-days/Game_AI_and_Reinforcement_Learning/ConnectX/v2/refmoves1k_kaggle") as f:
+    with open("/home/user/PycharmProjects/Kaggle_ConnectX/refmoves1k_kaggle") as f:
         print('Чтение исходного файла данных')
         for line in f:  # проводим обработку датасета построчно
             data = json.loads(line)  # создаем датафрем равный одной строке

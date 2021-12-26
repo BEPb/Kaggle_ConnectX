@@ -1,89 +1,61 @@
-## AlphaZero baseline for Connect4 game (distributed version)
-- In this example, we provide a fine-tuned AlphaZero baseline to solve the Connect4 game, based on the code of 
-  [alpha-zero-general](https://github.com/suragnair/alpha-zero-general) repo. 
-- We take advantage of the parallelism capacity of [PARL](https://github.com/PaddlePaddle/PARL) to support running 
-  self-play and evaluating tasks in parallel. 
-- We also provide scripts to pack your well-trained model to a submission file, which can be submitted to the Kaggle 
-  [Connect X](https://www.kaggle.com/c/connectx/leaderboard) competition directly. 
+##  Модель машинного обучения для соревнования kaggle игры ConnectX
 
-### Dependencies
+- Мы используем возможности параллелизма [PARL]  для выполнения самостоятельных игр между только что обученной 
+  моделью и лучшей версией предыдущих версий обучения.
+- Мы также предоставляем сценарии для упаковки вашей хорошо обученной модели в файл для отправки в Kaggle [Connect X]
+  (https://www.kaggle.com/c/connectx/leaderboard) напрямую.
+
+### Необходимые пакеты для работы 
 - python3
-- [parl>=1.4](https://github.com/PaddlePaddle/PARL)
+- parl
 - torch
 - tqdm
 
-### Training 
-1. Download the [1k connect4 validation set](https://www.kaggle.com/petercnudde/1k-connect4-validation-set) to the 
-   current directory. (filename: `refmoves1k_kaggle`) 
+### Тренировка модели
+1. Для первоначального обучения мы используем 1000 игр между двумя произвольными агентами с оценкой результатов игры.
+   Вы также можете скачать этот датасет самостоятельно  по следующей ссылке - [1k connect4 validation 
+   set](https://www.kaggle.com/petercnudde/1k-connect4-validation-set) 
 
-2. Start xparl cluster
+2. Для начала работу необходимо запустить кластер xparl следующей командой в терминале:
 ```bash
-# You can change following `cpu_num` and `args.actor_nums` in the main.py 
-# based on the CPU number of your machine.
-
-xparl start --port 8010 --cpu_num 25
-```
-
-```bash
-# [OPTIONAL] You can also run the following script in other machines to add more CPU resource 
-#            to the xparl cluster, so you can increase the parallelism (args.actor_nums).
-
-xparl connect --address MASTER_IP:8010 --cpu_num [CPU_NUM]
-```
-
-3. Run training script
-```bash
-python main.py
-```
-
-4. Visualize (good moves rate and perfect moves rate)
-```
-tensorboard --logdir .
-```
-
-### Submitting
-To submit the well-trained model to the Kaggle, you can use our provided script to generate `submission.py`, for example:
-```bash
-python benchmark/torch/AlphaZero/gen_submission.py saved_model/best.pth.tar
-```
-
-### Performance
-- Following are `good moves rate` and `perfect moves rate` indicators in tensorbaord, please refer to the [link]
-  (https://www.kaggle.com/petercnudde/scoring-connect-x-agents) for specific meaning. 
-
-
-> It takes about 1 day to run 25 iterations on the machine with 25 cpus.
-
-- It can reach about score 1368 (rank 5 on 2020/06/04) in the Kaggle [Connect X](https://www.kaggle.
-  com/c/connectx/leaderboard) competition. 
-
-
-### Reference
-- [suragnair/alpha-zero-general](https://github.com/suragnair/alpha-zero-general)
-- [Scoring connect-x agents](https://www.kaggle.com/petercnudde/scoring-connect-x-agents)
+# Вы можете изменить следующие `cpu_num` и` args.actor_nums` в main.py
+# в зависимости от количества ядер Центрального Процессора вашего компьютера.
+# у меня на ноутбуке их 8, для отображения прогресса тренировки запускаем веб-интерфейс, он в режиме реального 
+# времени покажет нагрузку на процессор, а также отобразит работу каждого агента (ядра Вашего ЦП)
 
 xparl start --port 8010 --cpu_num 8
-xparl connect --address 192.168.0.104:8010
-python benchmark/torch/AlphaZero/main.py
 
-python benchmark/torch/AlphaZero/connect4_game.py
-python benchmark/torch/AlphaZero/connect4_model.py
-python benchmark/torch/AlphaZero/connect4_aiplayer.py
-python /home/user/PycharmProjects/Python-100-days/Game_AI_and_Reinforcement_Learning/ConnectX/v2/connect4_aiplayer.py
-
-
+# для получения справочной информации введите
 xparl --help
+
+# или
 xparl connect --help
-xparl start
+```
+
+3. Далее в терминале запустите тренировочный скрипт main.py:
+```bash
+# это программа для запуска полного цикла тренировки Вашей модели (использует метод обучения с подкреплением)
+python /home/user/PycharmProjects/Kaggle_ConnectX/main.py
+```
+
+4. Для проверки статуса работы кластера xparl введите в терминале:
+```commandline
 xparl status
+```
+
+5. Для завершения работы кластера xparl введите в терминале:
+```commandline
 xparl stop
+```
 
-visualdl --logdir .
+### Отправка результата Вашей работы
+Чтобы отправить хорошо обученную модель в Kaggle, вы можете использовать предоставленный скрипт для создания 
+файла submission.py, для этого введите в терминале:
+```bash
+python /home/user/PycharmProjects/Kaggle_ConnectX/gen_submission.py /home/user/PycharmProjects/Kaggle_ConnectX/saved_model/best.pth.tar
+```
 
-python benchmark/torch/AlphaZero/gen_submission.py saved_model/best.pth.tar
-
-
-xparl start --port 8010 --cpu_num 8
-python /home/user/PycharmProjects/Python-100-days/Game_AI_and_Reinforcement_Learning/ConnectX/v2/main.py
-python /home/user/PycharmProjects/ConnectX/main.py
-python /home/user/PycharmProjects/Python-100-days/Game_AI_and_Reinforcement_Learning/ConnectX/v2/gen_submission.py /home/user/PycharmProjects/Python-100-days/Game_AI_and_Reinforcement_Learning/ConnectX/v2/saved_model/best.pth.tar
+### Полезные ссылки
+Вводные блокноты
+- [ConnectX Getting Started](https://www.kaggle.com/andrej0marinchenko/connectx-getting-started)
+- [СonnectX second step](https://www.kaggle.com/andrej0marinchenko/onnectx-second-step)
