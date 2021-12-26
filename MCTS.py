@@ -8,10 +8,10 @@ Author: Andrej Marinchenko
 Date: 2021-12-23
 """
 
-import math
-import time
+import math  # библиотека математических функций
+import time  # библиотека временных функций
 
-import numpy as np
+import numpy as np  # обработка массивов данных
 
 EPS = 1e-8
 
