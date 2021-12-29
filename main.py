@@ -66,7 +66,7 @@ args = dotdict({
         'load_model': True,
     # 'load_folder_file': ('./saved_model', 'checkpoint_24.pth.tar'),
     'load_folder_file': ('/home/user/PycharmProjects/Kaggle_ConnectX/saved_model',
-                         'checkpoint_6.pth.tar'),
+                         'checkpoint_18.pth.tar'),
 })
 
 # Plays arenaCompare games in which player1 starts arenaCompare/2 games and player2 starts arenaCompare/2 games.
