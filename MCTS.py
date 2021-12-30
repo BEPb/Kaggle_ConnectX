@@ -37,9 +37,8 @@ class MCTS():
 
     def getActionProb(self, canonicalBoard, temp=1):
         """
-        Эта функция выполняет numMCTSSims-симуляции MCTS, начиная с
-         canonicalBoard.
-         Возврат: probs: вектор политики, в котором вероятность i-го действия равна пропорционально Nsa [(s, a)] ** (1./temp)
+        Эта функция выполняет numMCTSSims-симуляции MCTS, начиная с canonicalBoard.
+        Возврат: probs: вектор политики, в котором вероятность i-го действия равна пропорционально Nsa [(s, a)] ** (1./temp)
         """
         for i in range(self.args.numMCTSSims):
             dir_noise = (i == 0 and self.dirichlet_noise)

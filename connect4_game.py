@@ -290,18 +290,9 @@ class Connect4Game(object):
 
     def stringRepresentation(self, board):
         """
-        Input:
-            board: current board
+        Вход: доска: текущая доска
 
-        Returns:
-            boardString: a quick conversion of board to a string format.
-                         Required by MCTS for hashing.
-
-        Вход:
-             доска: текущая доска
-
-         Возврат:
-             boardString: быстрое преобразование платы в строковый формат.
+         Возврат: boardString: быстрое преобразование платы в строковый формат.
                           Требуется MCTS для хеширования.
         """
         return board.tostring()
