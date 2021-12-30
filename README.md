@@ -69,6 +69,11 @@ xparl stop
 python /home/user/PycharmProjects/Kaggle_ConnectX/gen_submission.py /home/user/PycharmProjects/Kaggle_ConnectX/saved_model/best.pth.tar
 ```
 
+### запуск игры с обученной моделью и Вами
+```commandline
+python /home/user/PycharmProjects/Kaggle_ConnectX/connect4_aiplayer.py
+```
+
 ### Полезные ссылки
 Вводные блокноты
 - [ConnectX Getting Started](https://www.kaggle.com/andrej0marinchenko/connectx-getting-started)
