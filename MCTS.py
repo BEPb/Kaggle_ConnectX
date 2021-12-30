@@ -8,46 +8,37 @@ Author: Andrej Marinchenko
 Date: 2021-12-23
 """
 
-import math
-import time
+import math  # библиотека математических функций
+import time  # библиотека временных функций
 
-import numpy as np
+import numpy as np  # обработка массивов данных
 
 EPS = 1e-8
 
 
-class MCTS():  # This class handles the MCTS tree.
+class MCTS():
     """
     Этот класс обрабатывает дерево MCTS.
+    Принимает экземпляр Board и ключевые аргументы. Инициализирует список состояний игры и таблицы статистики.
     """
 
-    def __init__(self, game, nn_agent, args, dirichlet_noise=False):
-        self.game = game
-        self.nn_agent = nn_agent
-        self.args = args
-        self.dirichlet_noise = dirichlet_noise
-        self.Qsa = {}  # stores Q values for s,a (as defined in the paper)
-        self.Nsa = {}  # stores #times edge s,a was visited
-        self.Ns = {}  # stores #times board s was visited
-        self.Ps = {}  # stores initial policy (returned by neural net)
+    def __init__(self, game, nn_agent, args, dirichlet_noise=False):  # инициализация класса
+        self.game = game  # состояние игры
+        self.nn_agent = nn_agent  # состояние нейронной сети
+        self.args = args  # аргументы заданные в main.py
+        self.dirichlet_noise = dirichlet_noise  # шум Дирихле
+        self.Qsa = {}  # Ожидаемое вознаграждение за выполнение действия 'a' в состоянии 's'. Начальное значение Q(s,а) = 0
+        self.Nsa = {}  # Количество раз, когда действие 'a' было выполнено в состоянии 's'
+        self.Ns = {}  # Количество раз в состоянии 's'
+        self.Ps = {}  # Вероятность действия в состоянии 's', значение стратегии, предсказанное нейронной сетью
 
-        self.Es = {}  # stores game.getGameEnded ended for board s
-        self.Vs = {}  # stores game.getValidMoves for board s
+        self.Es = {}  # game.getGameEnded получить завершение игры для доски s
+        self.Vs = {}  # game.getValidMoves получить действительные ходы для доски s
 
     def getActionProb(self, canonicalBoard, temp=1):
-        # This function performs numMCTSSims simulations of MCTS starting from
-        #         canonicalBoard.
-        #
-        #         Returns:
-        #             probs: a policy vector where the probability of the ith action is
-        #                    proportional to Nsa[(s,a)]**(1./temp)
         """
-
-        Эта функция выполняет numMCTSSims-симуляции MCTS, начиная с
-         canonicalBoard.
-         Возврат:
-             probs: вектор политики, в котором вероятность i-го действия равна
-                    пропорционально Nsa [(s, a)] ** (1./temp)
+        Эта функция выполняет numMCTSSims-симуляции MCTS, начиная с canonicalBoard.
+        Возврат: probs: вектор политики, в котором вероятность i-го действия равна пропорционально Nsa [(s, a)] ** (1./temp)
         """
         for i in range(self.args.numMCTSSims):
             dir_noise = (i == 0 and self.dirichlet_noise)
@@ -72,26 +63,10 @@ class MCTS():  # This class handles the MCTS tree.
         return probs
 
     def search(self, canonicalBoard, dirichlet_noise=False):
-        # This function performs one iteration of MCTS. It is recursively called
-        #         till a leaf node is found. The action chosen at each node is one that
-        #         has the maximum upper confidence bound as in the paper.
-        #
-        #         Once a leaf node is found, the neural network is called to return an
-        #         initial policy P and a value v for the state. This value is propagated
-        #         up the search path. In case the leaf node is a terminal state, the
-        #         outcome is propagated up the search path. The values of Ns, Nsa, Qsa are
-        #         updated.
-        #
-        #         NOTE: the return values are the negative of the value of the current
-        #         state. This is done since v is in [-1,1] and if v is the value of a
-        #         state for the current player, then its value is -v for the other player.
-        #
-        #         Returns:
-        #             v: the negative of the value of the current canonicalBoard
         """
         Эта функция выполняет одну итерацию MCTS. Это рекурсивно называется
          пока не будет найден листовой узел. На каждом узле выбирается действие, которое
-         имеет максимальную верхнюю доверительную границу, как в статье.
+         имеет максимальную верхнюю доверительную границу.
 
          Как только листовой узел найден, вызывается нейронная сеть, чтобы вернуть
          начальная политика P и значение v для состояния. Это значение распространяется
@@ -103,7 +78,7 @@ class MCTS():  # This class handles the MCTS tree.
          государство. Это сделано, поскольку v находится в [-1,1] и если v - значение a
          state для текущего игрока, тогда его значение равно -v для другого игрока.
 
-         Возврат:   v: отрицательное значение текущего canonicalBoard
+         Возврат: v: отрицательное значение текущего canonicalBoard
         """
 
         s = self.game.stringRepresentation(canonicalBoard)
@@ -126,16 +101,14 @@ class MCTS():  # This class handles the MCTS tree.
             if sum_Ps_s > 0:
                 self.Ps[s] /= sum_Ps_s  # renormalize
             else:
-                # if all valid moves were masked make all valid moves equally probable
+                '''
+                если все допустимые ходы были замаскированы, сделать все допустимые ходы равновероятными
+                NB! Все допустимые ходы могут быть замаскированы, если либо ваша архитектура NNet недостаточна, 
+                либо у вас есть переоснащение или что-то еще. 
+                Если у вас есть десятки или сотни таких сообщений, вам следует обратить внимание на вашу NNet и / 
+                или процесс обучения.
+                '''
 
-                # NB! All valid moves may be masked if either your NNet architecture is insufficient or you've get overfitting or something else.
-                # If you have got dozens or hundreds of these messages you should pay attention to your NNet and/or training process.
-
-                # если все допустимые ходы были замаскированы, сделать все допустимые ходы равновероятными
-
-                # NB! Все допустимые ходы могут быть замаскированы, если либо ваша архитектура NNet недостаточна, либо у вас есть переоснащение или что-то еще.
-                # Если у вас есть десятки или сотни таких сообщений, вам следует обратить внимание на вашу NNet и / или процесс обучения.
-                # print("All valid moves were masked, doing a workaround.")
                 print("Все допустимые ходы были замаскированы, что позволяло обходное решение.")
                 self.Ps[s] = self.Ps[s] + valids
                 self.Ps[s] /= np.sum(self.Ps[s])
@@ -152,7 +125,6 @@ class MCTS():  # This class handles the MCTS tree.
         cur_best = -float('inf')
         best_act = -1
 
-        # pick the action with the highest upper confidence bound
         # выбрать действие с наивысшей верхней границей уверенности
         for a in range(self.game.getActionSize()):
             if valids[a]:

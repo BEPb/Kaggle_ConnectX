@@ -24,7 +24,7 @@ args = dotdict({
 
     # total number of iteration
     # общее количество итераций (циклов в файле Coach.py)
-    'numIters': 6,  # 25
+    'numIters': 4,  # 25
 
     # Number of complete self-play games to simulate during a new iteration.
     # Количество полных игр с самостоятельной игрой для моделирования во время новой итерации.

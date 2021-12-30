@@ -21,23 +21,23 @@ class Connect4Model(parl.Model):
         self.board_x, self.board_y = game.getBoardSize()
         self.action_size = game.getActionSize()
         self.args = args
-
+        '''
+        описываем состав нашей нейронной сети
+        четырехслойный сверточный слой с четырьмя полностью связанными слоями, из которых два последних полностью 
+        связанных слоя сопоставляются с функциями активации для вывода вероятностей действий π(s,а) и ценность v(s)
+        '''
         super(Connect4Model, self).__init__()
         self.conv1 = nn.Conv2d(1, args.num_channels, 3, stride=1, padding=1)
-        self.conv2 = nn.Conv2d(
-            args.num_channels, args.num_channels, 3, stride=1, padding=1)
-        self.conv3 = nn.Conv2d(
-            args.num_channels, args.num_channels, 3, stride=1)
-        self.conv4 = nn.Conv2d(
-            args.num_channels, args.num_channels, 3, stride=1)
+        self.conv2 = nn.Conv2d(args.num_channels, args.num_channels, 3, stride=1, padding=1)
+        self.conv3 = nn.Conv2d(args.num_channels, args.num_channels, 3, stride=1)
+        self.conv4 = nn.Conv2d(args.num_channels, args.num_channels, 3, stride=1)
 
         self.bn1 = nn.BatchNorm2d(args.num_channels)
         self.bn2 = nn.BatchNorm2d(args.num_channels)
         self.bn3 = nn.BatchNorm2d(args.num_channels)
         self.bn4 = nn.BatchNorm2d(args.num_channels)
 
-        self.fc1 = nn.Linear(
-            args.num_channels * (self.board_x - 4) * (self.board_y - 4), 128)
+        self.fc1 = nn.Linear(args.num_channels * (self.board_x - 4) * (self.board_y - 4), 128)
         self.fc_bn1 = nn.BatchNorm1d(128)
 
         self.fc2 = nn.Linear(128, 64)
