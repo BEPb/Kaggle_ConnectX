@@ -64,13 +64,13 @@ def draw_board(board, screen, height):
     pygame.display.update()
 
 
-game = Connect4Game()  # класс, реализующий общий интерфейс игры alpha-zero.
+game = Connect4Game()  # класс, реализующий общий интерфейс игры alpha-zero из файла connect4_game.py
 board = game._base_board  # задаем доску
 game_over = False  # переменная - игра не окончена
-current_board = board.np_pieces
-game.display(current_board)
+current_board = board.np_pieces  # текущая доска - доска с комнями
+game.display(current_board)  # отобразить текущую доску
 
-pygame.init()
+pygame.init()  # инициализация доски
 
 width = COLUMN_COUNT * SQUARESIZE
 height = (ROW_COUNT + 1) * SQUARESIZE
@@ -80,18 +80,18 @@ draw_board(current_board, screen, height)  # функция нарисовать
 my_font = pygame.font.SysFont('monospace', 75)
 turn = random.choice([PLAYER, AI])
 
+# получаем стартовые аргументы из лучшей сохраненной модели
 args = dotdict({
-    'load_folder_file': ('/home/user/PycharmProjects/Python-100-days/Game_AI_and_Reinforcement_Learning/ConnectX/v2/saved_model', 'best.pth.tar'),
+    'load_folder_file': ('/home/user/PycharmProjects/Kaggle_ConnectX/saved_model', 'best.pth.tar'),
     # 'load_folder_file': ('./saved_model', 'best_model'),
-    'numMCTSSims': 800,
+    'numMCTSSims': 800,  # Количество игровых ходов для моделирования MCTS
     'cpuct': 4,
 })
-# logger.info('Loading checkpoint {}...'.format(args.load_folder_file))
 logger.info('Загрузка контрольной точки {}...'.format(args.load_folder_file))
 c = Coach(game, args)
-c.loadModel()
-agent = c.current_agent
-mcts = MCTS(game, agent, args)
+c.loadModel()  # считываем модель
+agent = c.current_agent  # подключаем агента обученной модели
+mcts = MCTS(game, agent, args)  # получаем дерево монте-карло
 
 while not game_over:  # пока игра не закончится
     for event in pygame.event.get():
@@ -136,7 +136,7 @@ while not game_over:  # пока игра не закончится
         if turn == AI and not game_over:
             x = game.getCanonicalForm(current_board, turn)
             col = int(np.argmax(mcts.getActionProb(x, temp=0)))
-            col = np.argmax(pi)
+            col = np.argmax(pi)  # pi: вектор политики размера self.getActionSize()
             if board.is_valid_move(col):
                 current_board, _ = game.getNextState(current_board, turn, col)
                 if game.getGameEnded(current_board, PLAYER) == -1:
