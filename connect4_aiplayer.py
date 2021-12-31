@@ -38,6 +38,7 @@ WINDOW_LENGTH = 4
 SQUARESIZE = 100
 RADIUS = int(SQUARESIZE / 2 - 5)
 
+
 # функция нарисовать игровую доску
 def draw_board(board, screen, height):
     for c in range(COLUMN_COUNT):  # количество колонок
