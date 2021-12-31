@@ -33,14 +33,15 @@ PLAYER = 1  # обозначение игрока
 AI = -1  # обозначение модели
 EMPTY = 0  #
 
+# определяем размеры фигур
 WINDOW_LENGTH = 4
 SQUARESIZE = 100
 RADIUS = int(SQUARESIZE / 2 - 5)
 
 # функция нарисовать игровую доску
 def draw_board(board, screen, height):
-    for c in range(COLUMN_COUNT):
-        for r in range(ROW_COUNT):
+    for c in range(COLUMN_COUNT):  # количество колонок
+        for r in range(ROW_COUNT):  # количество строк
             pygame.draw.rect(screen, BLUE,
                              (c * SQUARESIZE, r * SQUARESIZE + SQUARESIZE,
                               SQUARESIZE, SQUARESIZE))
