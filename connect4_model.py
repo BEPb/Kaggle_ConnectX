@@ -24,12 +24,9 @@ class Connect4Model(parl.Model):
 
         super(Connect4Model, self).__init__()
         self.conv1 = nn.Conv2d(1, args.num_channels, 3, stride=1, padding=1)
-        self.conv2 = nn.Conv2d(
-            args.num_channels, args.num_channels, 3, stride=1, padding=1)
-        self.conv3 = nn.Conv2d(
-            args.num_channels, args.num_channels, 3, stride=1)
-        self.conv4 = nn.Conv2d(
-            args.num_channels, args.num_channels, 3, stride=1)
+        self.conv2 = nn.Conv2d(args.num_channels, args.num_channels, 3, stride=1, padding=1)
+        self.conv3 = nn.Conv2d(args.num_channels, args.num_channels, 3, stride=1)
+        self.conv4 = nn.Conv2d(args.num_channels, args.num_channels, 3, stride=1)
 
         self.bn1 = nn.BatchNorm2d(args.num_channels)
         self.bn2 = nn.BatchNorm2d(args.num_channels)

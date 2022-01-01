@@ -20,7 +20,7 @@ from connect4_model import Connect4Model
 args = dotdict({
     'lr': 0.001,
     'dropout': 0.3,
-    'epochs': 25,  # 25 - 5 количество эпох для тренировки нейронной сети
+    'epochs': 5,  # 5 - 25 - 5 количество эпох для тренировки нейронной сети
     'batch_size': 64,  # указываем по сколько примеров обрабатывает наша нейронная сеть для обучения
     'num_channels': 64,
 })
@@ -120,11 +120,6 @@ class AlphaZeroAgent(parl.Agent):
                 pbar.set_postfix(Loss_pi=pi_loss.item(), Loss_v=v_loss.item())
 
     def predict(self, board):
-        # Args:
-        #             board (np.array): input board
-        #         Return:
-        #             pi (np.array): probability of actions
-        #             v (np.array): estimated value of input
         """
         Аргументы:
              board (np.array): плата ввода
