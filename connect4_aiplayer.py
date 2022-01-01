@@ -7,29 +7,31 @@ Version: 0.1
 Author: Andrej Marinchenko
 Date: 2021-12-22
 """
-import math
-import random
-import sys
+import math  # подключаем библиотеку работы с математическими функциями
+import random  # библиотека случайных значений
+import sys  # работа с системными файлами
 
-import pygame
+import pygame  # библиотека для разработки мультимедийных приложений, таких как видеоигры, с использованием Python
 
-from utils import *
-from MCTS import MCTS
-from Coach import Coach
-from parl.utils import logger
-from connect4_game import Connect4Game
+# подключаем собственные файлы
+from utils import *  # программа утилит (обработки начального тестового датасета из 1000 игр, оценки результата игры)
+from MCTS import MCTS  # программа дерева Монте-Карло
+from Coach import Coach  # модель для сохранения, обучения и оценки
+from parl.utils import logger  # логирование программы
+from connect4_game import Connect4Game  # класс, реализующий общий интерфейс игры alpha-zero
 
+# определяем цвета игры
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 
-ROW_COUNT = 6
-COLUMN_COUNT = 7
+ROW_COUNT = 6  # количество строк
+COLUMN_COUNT = 7  # количество колонок
 
-PLAYER = 1
-AI = -1
-EMPTY = 0
+PLAYER = 1  # обозначение игрока
+AI = -1  # обозначение модели
+EMPTY = 0  #
 
 WINDOW_LENGTH = 4
 SQUARESIZE = 100
@@ -62,13 +64,13 @@ def draw_board(board, screen, height):
     pygame.display.update()
 
 
-game = Connect4Game()
-board = game._base_board
-game_over = False
-current_board = board.np_pieces
-game.display(current_board)
+game = Connect4Game()  # класс, реализующий общий интерфейс игры alpha-zero из файла connect4_game.py
+board = game._base_board  # задаем доску
+game_over = False  # переменная - игра не окончена
+current_board = board.np_pieces  # текущая доска - доска с комнями
+game.display(current_board)  # отобразить текущую доску
 
-pygame.init()
+pygame.init()  # инициализация доски
 
 width = COLUMN_COUNT * SQUARESIZE
 height = (ROW_COUNT + 1) * SQUARESIZE
@@ -78,34 +80,34 @@ draw_board(current_board, screen, height)  # функция нарисовать
 my_font = pygame.font.SysFont('monospace', 75)
 turn = random.choice([PLAYER, AI])
 
+# получаем стартовые аргументы из лучшей сохраненной модели
 args = dotdict({
-    'load_folder_file': ('/home/user/PycharmProjects/Python-100-days/Game_AI_and_Reinforcement_Learning/ConnectX/v2/saved_model', 'best.pth.tar'),
+    'load_folder_file': ('/home/user/PycharmProjects/Kaggle_ConnectX/saved_model', 'best.pth.tar'),
     # 'load_folder_file': ('./saved_model', 'best_model'),
-    'numMCTSSims': 800,
+    'numMCTSSims': 800,  # Количество игровых ходов для моделирования MCTS
     'cpuct': 4,
 })
-# logger.info('Loading checkpoint {}...'.format(args.load_folder_file))
 logger.info('Загрузка контрольной точки {}...'.format(args.load_folder_file))
 c = Coach(game, args)
-c.loadModel()
-agent = c.current_agent
-mcts = MCTS(game, agent, args)
+c.loadModel()  # считываем модель
+agent = c.current_agent  # подключаем агента обученной модели
+mcts = MCTS(game, agent, args)  # получаем дерево монте-карло
 
 while not game_over:  # пока игра не закончится
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit()
+        if event.type == pygame.QUIT:   # если выбрано - выход
+            sys.exit()  # завершить игру
 
-        if event.type == pygame.MOUSEMOTION:
+        if event.type == pygame.MOUSEMOTION:  # если совершено движение мышкой
             pygame.draw.rect(screen, BLACK, (0, 0, width, SQUARESIZE))
             posx = event.pos[0]
             if turn == PLAYER:
                 pygame.draw.circle(screen, RED, (posx, int(SQUARESIZE / 2)),
                                    RADIUS)
 
-        pygame.display.update()
+        pygame.display.update()  # обновить экран
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN:  # нажатие мышкой
             pygame.draw.rect(screen, BLACK, (0, 0, width, SQUARESIZE))
 
             if turn == PLAYER:
@@ -134,7 +136,7 @@ while not game_over:  # пока игра не закончится
         if turn == AI and not game_over:
             x = game.getCanonicalForm(current_board, turn)
             col = int(np.argmax(mcts.getActionProb(x, temp=0)))
-            # col = np.argmax(pi)
+            col = np.argmax(pi)  # pi: вектор политики размера self.getActionSize()
             if board.is_valid_move(col):
                 current_board, _ = game.getNextState(current_board, turn, col)
                 if game.getGameEnded(current_board, PLAYER) == -1:

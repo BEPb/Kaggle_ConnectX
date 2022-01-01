@@ -85,7 +85,7 @@ class AlphaZeroAgent(parl.Agent):
     def learn(self, examples):  # Args: examples: list of examples, each example is of form (board, pi, v)
         """
         Эта функция используется на 2-м шаге каждой итерации для тренировки модели
-        Аргументы: примеры: список примеров, каждый пример имеет форму (доска, пи, v)
+        Аргументы: примеры: список примеров, каждый пример имеет форму (доска, пи - вероятностей действий, v - ценность)
         """
         optimizer = optim.Adam(self.alg.model.parameters(), lr=args.lr)
 
@@ -93,36 +93,35 @@ class AlphaZeroAgent(parl.Agent):
             # print('EPOCH ::: ' + str(epoch + 1))
             print('Эпоха обучения нейронной сети ::: ' + str(epoch + 1))
 
-            batch_count = int(len(examples) / args.batch_size)
-
+            batch_count = int(len(examples) / args.batch_size)  # вычисляем количество операций в одной эпохе,
+            # равное количеству примеров поделенному на размер выборки одного вычисления batch_size
             """ 
             прогресс тренировки по эпохам наблюдаем путем загрузки примеров через бар tqdm
             """
             # pbar = tqdm(range(batch_count), desc='Training Net')
-            pbar = tqdm(range(batch_count), desc='Тренировка сети')
-            for _ in pbar:
-                sample_ids = np.random.randint(
-                    len(examples), size=args.batch_size)
+            pbar = tqdm(range(batch_count), desc='Тренировка')
+            for _ in pbar:  # отображение прогресса одной эпохи
+                sample_ids = np.random.randint(len(examples), size=args.batch_size)
                 boards, pis, vs = list(zip(*[examples[i] for i in sample_ids]))
                 boards = torch.FloatTensor(np.array(boards).astype(np.float64))
-                target_pis = torch.FloatTensor(np.array(pis))
-                target_vs = torch.FloatTensor(np.array(vs).astype(np.float64))
+                target_pis = torch.FloatTensor(np.array(pis))  # вероятностей действий
+                target_vs = torch.FloatTensor(np.array(vs).astype(np.float64))  # ценность
 
                 if self.cuda:
                     boards, target_pis, target_vs = boards.contiguous().cuda(
                     ), target_pis.contiguous().cuda(), target_vs.contiguous(
                     ).cuda()
 
-                total_loss, pi_loss, v_loss = self.alg.learn(
-                    boards, target_pis, target_vs, optimizer)
+                total_loss, pi_loss, v_loss = self.alg.learn(boards, target_pis, target_vs, optimizer)
 
                 # record loss with tqdm
                 pbar.set_postfix(Loss_pi=pi_loss.item(), Loss_v=v_loss.item())
 
+
+
     def predict(self, board):
         """
-        Аргументы:
-             board (np.array): плата ввода
+        Аргументы: board (np.array): плата ввода
          Возвращение:
              pi (np.array): вероятность действий
              v (np.array): оценочное значение ввода

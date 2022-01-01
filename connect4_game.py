@@ -28,7 +28,6 @@ class Board():
                  width=None,  # высота
                  win_length=None,  # выйгр. длинна
                  np_pieces=None):  # нп части
-        # "Set up initial board configuration."
         "Настройте начальную конфигурацию доски."
         self.height = height or DEFAULT_HEIGHT  # ширина доски по умолчанию
         self.width = width or DEFAULT_WIDTH  # высота додски по умолчанию
@@ -42,7 +41,6 @@ class Board():
             assert self.np_pieces.shape == (self.height, self.width)  # определяем представление формы и размера массива
 
     def add_stone(self, column, player):  # функция добавления камня
-        #"Create copy of board containing new stone."
         "Создайте копию доски, содержащую новый камень."
         available_idx, = np.where(self.np_pieces[:, column] == 0)  # Возвращает элементы, выбранные из таблицы в
         # которых elf.np_pieces[:, column] = 0
@@ -55,7 +53,7 @@ class Board():
 
     def get_valid_moves(self):
         #"Any zero value in top row in a valid move"
-        "Любое нулевое значение в верхней строке допустимого хода"
+        "Любое нулевое значение в верхней строке - означает что не все позиции заполнены - допустимо еще ходить"
         return self.np_pieces[0] == 0
 
     def get_win_state(self):  # функция проверки условия победы
@@ -74,19 +72,16 @@ class Board():
         if not self.get_valid_moves().any():  # если вся нулевая (верхняя) строка заполнена - ничья
             return WinState(True, None)  # если условие ничьей подтверждается возвращает WinState(истина и никто)
 
-        # Game is not ended yet.
         "иначе Игра еще не окончена."
         return WinState(False, None)
 
     def with_np_pieces(self, np_pieces):
-        # """Create copy of board with specified pieces."""
         """Создать копию доски с указанными частями."""
         if np_pieces is None:
             np_pieces = self.np_pieces
         return Board(self.height, self.width, self.win_length, np_pieces)
 
     def _is_diagonal_winner(self, player_pieces):
-        # """Checks if player_pieces contains a diagonal win."""
         """Проверяет, есть ли в player_pieces диагональный выигрыш."""
         win_length = self.win_length
         for i in range(len(player_pieces) - win_length + 1):
@@ -99,7 +94,6 @@ class Board():
         return False
 
     def _is_straight_winner(self, player_pieces):
-        # """Checks if player_pieces contains a vertical or horizontal win."""
         """Проверяет, содержит ли player_pieces вертикальный или горизонтальный выигрыш."""
         run_lengths = [
             player_pieces[:, i:i + self.win_length].sum(axis=1)
@@ -112,7 +106,6 @@ class Board():
 
 # Connect4 Game - класс, реализующий общий интерфейс игры alpha-zero. Используйте 1 для player1 и -1 для player2.
 class Connect4Game(object):
-    # Connect4 Game class implementing the alpha-zero-general Game interface. Use 1 for player1 and -1 for player2.
     """
     Connect4 Game - класс, реализующий общий интерфейс игры alpha-zero. Используйте 1 для player1 и -1 для player2.
     """
@@ -125,7 +118,6 @@ class Connect4Game(object):
         self._base_board = Board(height, width, win_length, np_pieces)
 
     def getInitBoard(self):
-        # Returns: startBoard: a representation of the board (ideally this is the form that will be the input to your neural network)
         """
         Возвращает: startBoard: представление доски (в идеале это форма, которая будет входить в вашу нейронную сеть)
         """
@@ -140,23 +132,12 @@ class Connect4Game(object):
 
     def getActionSize(self):
         """
-        Returns: actionSize: number of all possible actions
         Возвращает: actionSize: количество всех возможных действий
         """
         return self._base_board.width
 
     def getNextState(self, board, player, action):
-        """Returns a copy of the board with updated move, original board is unmodified.
-
-        Input:
-            board: current board
-            player: current player (1 or -1)
-            action: action taken by current player
-
-        Returns:
-            nextBoard: board after applying action
-            nextPlayer: player who plays in the next turn (should be -player)
-
+        """
             Возвращает копию доски с обновленным ходом, исходная доска не изменена.
 
          Вход:
@@ -174,17 +155,7 @@ class Connect4Game(object):
         return b.np_pieces, -player
 
     def getValidMoves(self, board, player):
-        """Any zero value in top row in a valid move.
-
-        Input:
-            board: current board
-            player: current player
-
-        Returns:
-            validMoves: a binary vector of length self.getActionSize(), 1 for
-                        moves that are valid from the current board and player,
-                        0 for invalid moves
-
+        """
             Любое нулевое значение в верхней строке допустимого хода.
 
          Вход:
@@ -201,14 +172,6 @@ class Connect4Game(object):
 
     def getGameEnded(self, board, player):
         """
-        Input:
-            board: current board
-            player: current player (1 or -1)
-
-        Returns:
-            r: 0 if game has not ended. 1 if player won, -1 if player lost,
-               small non-zero value for draw.
-
             Вход:
              доска: текущая доска
              player: текущий игрок (1 или -1)
@@ -235,18 +198,7 @@ class Connect4Game(object):
             return 0
 
     def getCanonicalForm(self, board, player):
-        """ 
-        Input:
-            board: current board
-            player: current player (1 or -1)
-
-        Returns:
-            canonicalBoard: returns canonical form of board. The canonical form
-                            should be independent of player. For e.g. in chess,
-                            the canonical form can be chosen to be from the pov
-                            of white. When the player is white, we can return
-                            board as is. When the player is black, we can invert
-                            the colors and return the board.
+        """
         Вход:
              доска: текущая доска
              player: текущий игрок (1 или -1)
@@ -262,18 +214,7 @@ class Connect4Game(object):
         return board * player
 
     def getSymmetries(self, board, pi):
-        """Board is left/right board symmetric
-
-        Input:
-            board: current board
-            pi: policy vector of size self.getActionSize()
-
-        Returns:
-            symmForms: a list of [(board,pi)] where each tuple is a symmetrical
-                       form of the board and the corresponding pi vector. This
-                       is used when training the neural network from examples.
-
-            Доска левая / правая, доска симметричная
+        """ Доска левая / правая, доска симметричная
 
          Вход:
              доска: текущая доска
@@ -290,18 +231,9 @@ class Connect4Game(object):
 
     def stringRepresentation(self, board):
         """
-        Input:
-            board: current board
+        Вход: доска: текущая доска
 
-        Returns:
-            boardString: a quick conversion of board to a string format.
-                         Required by MCTS for hashing.
-
-        Вход:
-             доска: текущая доска
-
-         Возврат:
-             boardString: быстрое преобразование платы в строковый формат.
+         Возврат: boardString: быстрое преобразование платы в строковый формат.
                           Требуется MCTS для хеширования.
         """
         return board.tostring()
