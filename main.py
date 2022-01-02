@@ -24,7 +24,7 @@ args = dotdict({
 
     # total number of iteration
     # общее количество итераций (циклов в файле Coach.py)
-    'numIters': 4,  # 25
+    'numIters': 25,  # 25
 
     # Number of complete self-play games to simulate during a new iteration.
     # Количество полных игр с самостоятельной игрой для моделирования во время новой итерации.
@@ -37,13 +37,13 @@ args = dotdict({
 
     # Number of games moves for MCTS to simulate.
     # Количество игровых ходов для моделирования MCTS.
-    'numMCTSSims': 800,  #  800 ?????????
+    'numMCTSSims': 1600,  #  800 ?????????
     # temp=1 (Temperature, τ (tau)) if episodeStep < tempThresholdStep, and thereafter uses temp=0.
     'tempThresholdStep': 15,  # 15  ???????
 
     # During arena playoff, new neural net will be accepted if threshold or more of games are won.
     # Во время плей-офф арены новая нейронная сеть будет принята, если будет выиграно пороговое или большее количество игр.
-    'updateThreshold': 0.9,  # 0.6
+    'updateThreshold': 0.6,  # 0.6
     # CPUCT parameter
     'cpuct': 5,
 
@@ -66,7 +66,7 @@ args = dotdict({
         'load_model': True,
     # 'load_folder_file': ('./saved_model', 'checkpoint_24.pth.tar'),
     'load_folder_file': ('/home/user/PycharmProjects/Kaggle_ConnectX/saved_model',
-                         'checkpoint_6.pth.tar'),
+                         'checkpoint_5.pth.tar'),
 })
 
 # Plays arenaCompare games in which player1 starts arenaCompare/2 games and player2 starts arenaCompare/2 games.

@@ -98,7 +98,7 @@ class Coach():
 
             logger.info('Обработка результатов')
             for result in results:
-                logger.info('Результат: ', result)
+                # logger.info('Результат: ', result)
                 iterationTrainExamples.extend(result)
 
             # save the iteration examples to the history
