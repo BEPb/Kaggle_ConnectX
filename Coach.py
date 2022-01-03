@@ -151,13 +151,14 @@ class Coach():
             ]
             perfect_moves_cnt, good_moves_cnt = 0, 0
             # wait for all remote actors (a total of self.args.actors_num) to return the evaluating results
-            # ждем, пока все удаленные акторы (всего self.args.actors_num) вернут результаты оценки
+            # ждем, пока все удаленные актеры (всего self.args.actors_num) вернут результаты оценки
             for result in results:
                 (perfect_moves, good_moves) = result
                 perfect_moves_cnt += perfect_moves
                 good_moves_cnt += good_moves
             # logger.info('perfect moves rate: {}, good moves rate: {}'.format(perfect_moves_cnt / cnt, good_moves_cnt / cnt))
-            logger.info('скорость идеальных ходов: {}, скорость хороших ходов: {}'.format(perfect_moves_cnt / cnt, good_moves_cnt / cnt))
+            logger.info('процент идеальных ходов: {}, процент хороших ходов: {}'.format(perfect_moves_cnt / cnt,
+                                                                                   good_moves_cnt / cnt))
             tensorboard.add_scalar('perfect_moves_rate', perfect_moves_cnt / cnt, iteration)
             tensorboard.add_scalar('good_moves_rate', good_moves_cnt / cnt, iteration)
 
