@@ -236,7 +236,8 @@ class Connect4Game(object):
          Возврат: boardString: быстрое преобразование платы в строковый формат.
                           Требуется MCTS для хеширования.
         """
-        return board.tostring()
+        # return board.tostring()
+        return board.tobytes()
 
     @staticmethod
     def display(board):
