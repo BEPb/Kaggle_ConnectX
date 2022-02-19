@@ -28,18 +28,18 @@ args = dotdict({
 
     # Number of complete self-play games to simulate during a new iteration.
     # Количество полных игр с самостоятельной игрой для моделирования во время новой итерации.
-    'numEps': 1000,  # 1000 - 1 - 100 - 500
+    'numEps': 500,  # 1000 - 1 - 100 - 500
 
     # Number of games to play during arena (pitting) play to determine if new neural network will be accepted.
     # Количество игр, которые нужно сыграть во время игры на арене (питтинг), чтобы определить, будет ли принята новая
     # нейронная сеть.
-    'arenaCompare': 100,  # 50
+    'arenaCompare': 50,  # 100- 50
 
     # Number of games moves for MCTS to simulate.
     # Количество игровых ходов для моделирования MCTS.
-    'numMCTSSims': 1600,  #  800 ?????????
+    'numMCTSSims': 6000000,  # 1600 - 800
     # temp=1 (Temperature, τ (tau)) if episodeStep < tempThresholdStep, and thereafter uses temp=0.
-    'tempThresholdStep': 15,  # 15  ???????
+    'tempThresholdStep': 15,  # 15
 
     # During arena playoff, new neural net will be accepted if threshold or more of games are won.
     # Во время плей-офф арены новая нейронная сеть будет принята, если будет выиграно пороговое или большее количество игр.
@@ -53,7 +53,7 @@ args = dotdict({
 
     # history of examples from numItersForTrainExamplesHistory latest iterations (training data)
     # история примеров из последних итераций numItersForTrainExamplesHistory (данные обучения)
-    'numItersForTrainExamplesHistory': 1000,  # 20
+    'numItersForTrainExamplesHistory': 500,  # 20
 
     # folder to save model and training examples
     # папка для сохранения моделей и обучающих примеров
@@ -66,7 +66,7 @@ args = dotdict({
         'load_model': True,
     # 'load_folder_file': ('./saved_model', 'checkpoint_24.pth.tar'),
     'load_folder_file': ('/home/user/PycharmProjects/Kaggle_ConnectX/saved_model',
-                         'checkpoint_5.pth.tar'),
+                         'checkpoint_1.pth.tar'),
 })
 
 # Plays arenaCompare games in which player1 starts arenaCompare/2 games and player2 starts arenaCompare/2 games.

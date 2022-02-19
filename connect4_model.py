@@ -7,7 +7,7 @@ Version: 0.1
 Author: Andrej Marinchenko
 Date: 2021-12-23
 """
-import parl   # подключаем веб интерфейс мониторинга за обучением
+import parl  # подключаем веб интерфейс мониторинга за обучением
 
 import torch  # библиотека машинного обучения pytorh
 import torch.nn as nn  # подключаем нейронную сеть
