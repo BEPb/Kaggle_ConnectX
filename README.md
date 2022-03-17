@@ -39,11 +39,14 @@ pip3 install -r requirements.txt
 
 xparl start --port 8010 --cpu_num 8
 
+#xparl start --port 8000 --debug --cpu_num 8 --monitor_port 8001 --log_server_port_range 8002-8010
+
 # для получения справочной информации введите
 xparl --help
 
 # или
 xparl connect --help
+#xparl connect --address 127.0.0.1 --cpu_num 8 --log_server_port_range 8011-8019
 ```
 
 3. Далее в терминале запустите тренировочный скрипт main.py:
