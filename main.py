@@ -24,11 +24,11 @@ args = dotdict({
 
     # total number of iteration
     # общее количество итераций (циклов в файле Coach.py)
-    'numIters': 25,  # 25
+    'numIters': 200,  # 25
 
     # Number of complete self-play games to simulate during a new iteration.
     # Количество полных игр с самостоятельной игрой для моделирования во время новой итерации.
-    'numEps': 2000,  # 2000 - 1000 - 1 - 100 - 500
+    'numEps': 10,  # 10 - 2000 - 1000 - 1000 - 1 - 100 - 500
 
     # Number of games to play during arena (pitting) play to determine if new neural network will be accepted.
     # Количество игр, которые нужно сыграть во время игры на арене (питтинг), чтобы определить, будет ли принята новая
@@ -37,13 +37,13 @@ args = dotdict({
 
     # Number of games moves for MCTS to simulate.
     # Количество игровых ходов для моделирования MCTS.
-    'numMCTSSims': 2500,  #  2500 - 800
+    'numMCTSSims': 2500,  # 2500 - 800 ?????????
     # temp=1 (Temperature, τ (tau)) if episodeStep < tempThresholdStep, and thereafter uses temp=0.
     'tempThresholdStep': 15,  # 15  ???????
 
     # During arena playoff, new neural net will be accepted if threshold or more of games are won.
     # Во время плей-офф арены новая нейронная сеть будет принята, если будет выиграно пороговое или большее количество игр.
-    'updateThreshold': 0.6,  # 0.6 - 0.9 - 0.6
+    'updateThreshold': 0.6,  # 0.6
     # CPUCT parameter
     'cpuct': 5,
 
@@ -53,7 +53,7 @@ args = dotdict({
 
     # history of examples from numItersForTrainExamplesHistory latest iterations (training data)
     # история примеров из последних итераций numItersForTrainExamplesHistory (данные обучения)
-    'numItersForTrainExamplesHistory': 100,  # 50 - 500 - 1000 - 20
+    'numItersForTrainExamplesHistory': 10,  # 10 - 2000 - 1000 - 20
 
     # folder to save model and training examples
     # папка для сохранения моделей и обучающих примеров
@@ -66,7 +66,7 @@ args = dotdict({
         'load_model': True,
     # 'load_folder_file': ('./saved_model', 'checkpoint_24.pth.tar'),
     'load_folder_file': ('/home/user/PycharmProjects/Kaggle_ConnectX/saved_model',
-                         'checkpoint_2.pth.tar'),
+                         'checkpoint_1.pth.tar'),
 })
 
 # Plays arenaCompare games in which player1 starts arenaCompare/2 games and player2 starts arenaCompare/2 games.

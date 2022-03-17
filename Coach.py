@@ -219,9 +219,10 @@ class Coach():
 
     def loadModel(self):
         print('прочитать модель')
+
         self.current_agent.restore(
             os.path.join(self.args.load_folder_file[0],
-                         self.args.load_folder_file[1]))
+                         self.args.load_folder_file[1]), map_location ='cpu')
 
     def loadTrainExamples(self):
         modelFile = os.path.join(self.args.load_folder_file[0],
